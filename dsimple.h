@@ -26,7 +26,7 @@ other dealings in this Software without prior written authorization
 from The Open Group.
 
 */
-/* $XFree86: xc/programs/xlsfonts/dsimple.h,v 1.9 2003/11/17 22:20:54 dawes Exp $ */
+/* $XFree86$ */
 
 /*
  * Just_display.h: This file contains the definitions needed to use the
