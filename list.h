@@ -38,6 +38,7 @@ from The Open Group.
 #ifndef LIST_DEF
 #define LIST_DEF
 
+#include <X11/Xfuncproto.h>
 #define LESS	-1
 #define EQUAL	0
 #define GREATER	1

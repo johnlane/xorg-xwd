@@ -26,25 +26,22 @@ other dealings in this Software without prior written authorization
 from The Open Group.
 
 */
+/* $XFree86: xc/programs/xlsfonts/dsimple.c,v 3.6 2001/12/14 20:02:09 dawes Exp $ */
 
 #include <X11/Xos.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
 /*
  * Other_stuff.h: Definitions of routines in other_stuff.
  *
  * Written by Mark Lillibridge.   Last updated 7/1/87
  */
 
-unsigned long Resolve_Color();
-Pixmap Bitmap_To_Pixmap();
-Window Select_Window();
-void out();
-void blip();
-Window Window_With_Name();
-void Fatal_Error();
+#include "dsimple.h"
 
 /*
  * Just_display: A group of routines designed to make the writting of simple
@@ -58,10 +55,11 @@ void Fatal_Error();
 
 
 /* This stuff is defined in the calling program by just_display.h */
-extern char *program_name;
-extern Display *dpy;
-extern int screen;
+char *program_name = "unknown_program";
+Display *dpy;
+int screen;
 
+static void _bitmap_error(int, char *);
 
 /*
  * Malloc: like malloc but handles out of memory using Fatal_Error.
@@ -69,7 +67,7 @@ extern int screen;
 char *Malloc(size)
      unsigned size;
 {
-	char *data, *malloc();
+	char *data;
 
 	if (!(data = malloc(size)))
 	  Fatal_Error("Out of memory!");
@@ -85,7 +83,7 @@ char *Realloc(ptr, size)
         char *ptr;
         int size;
 {
-	char *new_ptr, *realloc();
+	char *new_ptr;
 
 	if (!ptr)
 	  return(Malloc(size));
@@ -326,9 +324,6 @@ Window Select_Window_Args(rargc, argv)
  * Written by Mark Lillibridge.   Last updated 7/1/87
  */
 
-extern Display *dpy;
-extern int screen;
-
 /*
  * Resolve_Color: This routine takes a color name and returns the pixel #
  *                that when used in the window w will be of color name.
@@ -402,7 +397,9 @@ Pixmap Bitmap_To_Pixmap(dpy, d, gc, bitmap, width, height)
  */
 void blip()
 {
-  outl("blip!");
+    fflush(stdout);
+    fprintf(stderr, "blip!\n");
+    fflush(stderr);
 }
 
 
@@ -493,13 +490,14 @@ Window Window_With_Name(dpy, top, name)
  *       in code so we can tell where we are.  Outl may be invoked like
  *       printf with up to 7 arguments.
  */
-/* VARARGS1 */
-outl(msg, arg0,arg1,arg2,arg3,arg4,arg5,arg6)
-     char *msg;
-     char *arg0, *arg1, *arg2, *arg3, *arg4, *arg5, *arg6;
+void
+outl(char *msg, ...)
 {
+	va_list args;
 	fflush(stdout);
-	fprintf(stderr, msg, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+	va_start(args, msg);
+	vfprintf(stderr, msg, args);
+	va_end(args);
 	fprintf(stderr, "\n");
 	fflush(stderr);
 }
@@ -509,15 +507,15 @@ outl(msg, arg0,arg1,arg2,arg3,arg4,arg5,arg6)
  * Standard fatal error routine - call like printf but maximum of 7 arguments.
  * Does not require dpy or screen defined.
  */
-/* VARARGS1 */
-void Fatal_Error(msg, arg0,arg1,arg2,arg3,arg4,arg5,arg6)
-char *msg;
-char *arg0, *arg1, *arg2, *arg3, *arg4, *arg5, *arg6;
+void Fatal_Error(char *msg, ...)
 {
+	va_list args;
 	fflush(stdout);
 	fflush(stderr);
 	fprintf(stderr, "%s: error: ", program_name);
-	fprintf(stderr, msg, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+	va_start(args, msg);
+	vfprintf(stderr, msg, args);
+	va_end(args);
 	fprintf(stderr, "\n");
 	exit(1);
 }

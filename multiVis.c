@@ -34,6 +34,8 @@ other dealings in this Software without prior written authorization
 from The Open Group.
 
     ------------------------------------------------------------------------ **/
+/* $XFree86: xc/programs/xwd/multiVis.c,v 1.8 2002/12/10 22:38:50 tsi Exp $ */
+
 #include <stdlib.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -42,8 +44,6 @@ from The Open Group.
 #include "list.h"
 #include "wsutils.h"
 #include "multiVis.h"
-static char *vis_class_str[] = { "StaticGray" , "GrayScale" , "StaticColor",
-				 "PseudoColor","TrueColor","DirectColor" } ;
 /* These structures are copied from X11/region.h.  For some reason
  * they're invisible from the outside.
  */
@@ -182,6 +182,17 @@ static int src_in_overlay(
     image_region_type *, int, OverlayInfo *, int*, int*
 #endif 
     );
+static void make_src_list(
+#if NeedFunctionPrototypes
+    Display *, list_ptr, XRectangle *, Window,
+    int, int, XWindowAttributes *, XRectangle *
+#endif 
+);
+static void destroy_image_region(
+#if NeedFunctionPrototypes
+    image_region_type *
+#endif
+);
 
 /* End of Prototype Declarations */
 
@@ -514,7 +525,7 @@ XImage *ReadAreaToImage(disp, srcRootWinid, x, y, width, height,
     image_region_type	*reg;
     XRectangle		bbox;		/* bounding box of grabbed area */
     int 		depth ;
-    XImage		*ximage, *ximage_ipm ;
+    XImage		*ximage, *ximage_ipm = NULL;
     Visual		fakeVis ;
     int 	x1, y1;
     XImage	*image;
@@ -876,7 +887,7 @@ static list_ptr make_region_list( disp, win, bbox, hasNonDefault,
 /** ------------------------------------------------------------------------
 	Destructor called from destroy_region_list().
     ------------------------------------------------------------------------ **/
-void destroy_image_region( image_region)
+static void destroy_image_region(image_region)
     image_region_type *image_region;
 {
     XDestroyRegion( image_region->visible_region);
@@ -977,6 +988,7 @@ static void add_window_to_list( image_wins, w, xrr, yrr, x_vis, y_vis,
     int 	y_vis;
     int 	width;
     int 	height;
+    int		border_width;
     Visual	*vis;
     Colormap	cmap;
     Window	parent;
