@@ -34,7 +34,7 @@ other dealings in this Software without prior written authorization
 from The Open Group.
 
     -------------------------------------------------------------------- **/
-/* $XFree86$ */
+/* $XFree86: xc/programs/xwd/list.h,v 1.6 2003/11/17 22:20:54 dawes Exp $ */
 
 #ifndef LIST_DEF
 #define LIST_DEF

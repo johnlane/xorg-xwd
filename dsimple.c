@@ -26,7 +26,7 @@ other dealings in this Software without prior written authorization
 from The Open Group.
 
 */
-/* $XFree86: xc/programs/xlsfonts/dsimple.c,v 3.6 2001/12/14 20:02:09 dawes Exp $ */
+/* $XFree86: xc/programs/xlsfonts/dsimple.c,v 3.7 2003/09/24 02:43:38 dawes Exp $ */
 
 #include <X11/Xos.h>
 #include <X11/Xlib.h>
