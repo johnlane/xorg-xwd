@@ -39,11 +39,23 @@ from The Open Group.
  * Send bugs, etc. to chariot@athena.mit.edu.
  */
 
+    /* Simple helper macros */
+#ifndef MAX
+#define MAX(a,b) (((a)>(b))?(a):(b))
+#endif /* MAX */
+#ifndef MIN
+#define MIN(a,b) (((a)<(b))?(a):(b))
+#endif /* MIN */
+
     /* Global variables used by routines in just_display.c */
 
 extern char *program_name;                   /* Name of this program */
 extern Display *dpy;                         /* The current display */
 extern int screen;                           /* The current screen */
+extern Bool printer_output;                  /* Video or printer output ? */
+#ifdef BUILD_PRINTSUPPORT
+extern XPContext pcontext;                   /* The current print context */
+#endif /* BUILD_PRINTSUPPORT */
 
 #define INIT_NAME program_name=argv[0]        /* use this in main to setup
                                                  program_name */
@@ -53,8 +65,12 @@ extern int screen;                           /* The current screen */
 char *Malloc(unsigned);
 char *Realloc(char *, int);
 char *Get_Display_Name(int *, char **);
+#ifdef BUILD_PRINTSUPPORT
+char *Get_Printer_Name(int *, char **);
+#endif /* BUILD_PRINTSUPPORT */
 Display *Open_Display(char *);
 void Setup_Display_And_Screen(int *, char **);
+void Close_Display(void);
 XFontStruct *Open_Font(char *);
 void Beep(void);
 Pixmap ReadBitmapFile(Drawable, char *, int *, int *, int *, int *);

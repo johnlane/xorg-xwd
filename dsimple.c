@@ -41,6 +41,9 @@ from The Open Group.
  * Written by Mark Lillibridge.   Last updated 7/1/87
  */
 
+#ifdef BUILD_PRINTSUPPORT
+#include <X11/XprintUtil/xprintutil.h>
+#endif /* BUILD_PRINTSUPPORT */
 #include "dsimple.h"
 
 /*
@@ -55,9 +58,13 @@ from The Open Group.
 
 
 /* This stuff is defined in the calling program by just_display.h */
-char *program_name = "unknown_program";
-Display *dpy;
-int screen;
+char    *program_name = "unknown_program";
+Display *dpy = NULL;
+int      screen = 0;
+Bool     printer_output = False; /* Video or printer output ? */
+#ifdef BUILD_PRINTSUPPORT
+XPContext pcontext = None;
+#endif /* BUILD_PRINTSUPPORT */
 
 static void _bitmap_error(int, char *);
 
@@ -131,6 +138,43 @@ char *Get_Display_Name(pargc, argv)
 }
 
 
+#ifdef BUILD_PRINTSUPPORT
+/*
+ * Get_Printer_Name (argc, argv) Look for -printer, -p,
+ * If found, remove it from command line.  Don't go past a lone -.
+ */
+char *Get_Printer_Name(pargc, argv)
+    int *pargc;  /* MODIFIED */
+    char **argv; /* MODIFIED */
+{
+    int argc = *pargc;
+    char **pargv = argv+1;
+    char *printername = NULL;
+    int i;
+
+    for (i = 1; i < argc; i++) {
+	char *arg = argv[i];
+
+	if (!strcmp (arg, "-printer") || !strcmp (arg, "-p")) {
+	    if (++i >= argc) usage ();
+
+	    printername = argv[i];
+	    *pargc -= 2;
+	    continue;
+	}
+	if (!strcmp(arg,"-")) {
+		while (i<argc)
+			*pargv++ = argv[i++];
+		break;
+	}
+	*pargv++ = arg;
+    }
+
+    *pargv = NULL;
+    return (printername);
+}
+#endif /* BUILD_PRINTSUPPORT */
+
 /*
  * Open_Display: Routine to open a display with correct error handling.
  *               Does not require dpy or screen defined on entry.
@@ -163,8 +207,60 @@ void Setup_Display_And_Screen(argc, argv)
 int *argc;      /* MODIFIED */
 char **argv;    /* MODIFIED */
 {
-	dpy = Open_Display (Get_Display_Name(argc, argv));
-	screen = DefaultScreen(dpy);
+        char *displayname = NULL,
+             *printername = NULL;
+        
+        displayname = Get_Display_Name(argc, argv);
+#ifdef BUILD_PRINTSUPPORT
+        printername = Get_Printer_Name(argc, argv);
+        
+        if (displayname && printername) {
+	    fprintf (stderr, "%s:  you cannot specify -printer (-p) and -display (-d) at the same time.\n",
+		     program_name);
+	    usage ();
+        }
+
+        if (printername) {
+            printer_output = True;
+            
+            if (XpuGetPrinter(printername, &dpy, &pcontext) != 1) {
+                fprintf(stderr, "%s: Cannot open printer '%s'.\n", program_name, printername);
+                exit(EXIT_FAILURE);
+            }
+
+            screen = XScreenNumberOfScreen(XpGetScreenOfContext(dpy, pcontext));
+        }
+        else
+#endif /* BUILD_PRINTSUPPORT */
+        {
+            printer_output = False;
+
+	    dpy = Open_Display (displayname);
+	    screen = XDefaultScreen(dpy);
+        }
+}
+
+/*
+ * Close_Display: Close display
+ */
+void Close_Display(void)
+{
+    if (dpy == NULL)
+      return;
+      
+#ifdef BUILD_PRINTSUPPORT
+    if (printer_output) {
+        XpuClosePrinterDisplay(dpy, pcontext);
+        dpy            = NULL;
+        pcontext       = None;
+        printer_output = False;
+    }
+    else
+#endif /* BUILD_PRINTSUPPORT */
+    {
+        XCloseDisplay(dpy);
+        dpy = NULL;
+    }
 }
 
 
@@ -517,5 +613,6 @@ void Fatal_Error(char *msg, ...)
 	vfprintf(stderr, msg, args);
 	va_end(args);
 	fprintf(stderr, "\n");
-	exit(1);
+        Close_Display();
+	exit(EXIT_FAILURE);
 }
