@@ -21,8 +21,8 @@
 
 bin_PROGRAMS = xwd
 
-xwd_CFLAGS = $(DEP_CFLAGS)
-xwd_LDADD = $(DEP_LIBS)
+xwd_CFLAGS = $(XWD_CFLAGS)
+xwd_LDADD = $(XWD_LIBS)
 
 xwd_SOURCES =	\
         dsimple.c \
