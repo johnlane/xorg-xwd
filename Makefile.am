@@ -34,6 +34,6 @@ xwd_SOURCES =	\
         wsutils.h \
         xwd.c
 
-dist_man_MANS = \
+dist_man1_MANS = \
         xwd.man
 
