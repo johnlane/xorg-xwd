@@ -1,3 +1,9 @@
+2005-11-20  Alan Coopersmith  <alan.coopersmith@sun.com>
+
+	* configure.ac:
+	Change dependency from xmu to xmuu since the full xmu
+	(with all its baggage like Xt) is not needed here.
+
 2005-10-18  Kevin E. Martin  <kem-at-freedesktop-dot-org>
 
 	* configure.ac:
