@@ -91,7 +91,7 @@ void usage(void);
 
 unsigned long Resolve_Color(Window, char *);
 Pixmap Bitmap_To_Pixmap(Display *, Drawable, GC, Pixmap, int, int);
-Window Select_Window(Display *);
+Window Select_Window(Display *, int);
 void blip(void);
 Window Window_With_Name(Display *, Window, char *);
 #ifdef __GNUC__

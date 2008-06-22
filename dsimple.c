@@ -44,6 +44,7 @@ from The Open Group.
 #ifdef BUILD_PRINTSUPPORT
 #include <X11/XprintUtil/xprintutil.h>
 #endif /* BUILD_PRINTSUPPORT */
+#include "clientwin.h"
 #include "dsimple.h"
 
 /*
@@ -503,8 +504,7 @@ void blip()
  * Routine to let user select a window using the mouse
  */
 
-Window Select_Window(dpy)
-     Display *dpy;
+Window Select_Window(Display *dpy, int descend)
 {
   int status;
   Cursor cursor;
@@ -542,6 +542,11 @@ Window Select_Window(dpy)
   } 
 
   XUngrabPointer(dpy, CurrentTime);      /* Done with pointer */
+
+  if (!descend || (target_win == root))
+    return(target_win);
+
+  target_win = Find_Client(dpy, root, target_win);
 
   return(target_win);
 }

@@ -25,6 +25,8 @@ xwd_CFLAGS = $(XWD_CFLAGS)
 xwd_LDADD = $(XWD_LIBS)
 
 xwd_SOURCES =	\
+        clientwin.c \
+        clientwin.h \
         dsimple.c \
         dsimple.h \
         list.c \
