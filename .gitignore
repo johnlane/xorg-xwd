@@ -18,3 +18,7 @@ stamp-h1
 xwd
 xwd.1
 *~
+*.o
+xwd-*.tar.*
+ChangeLog
+tags
