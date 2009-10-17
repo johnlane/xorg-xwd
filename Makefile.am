@@ -21,7 +21,7 @@
 
 bin_PROGRAMS = xwd
 
-xwd_CFLAGS = $(XWD_CFLAGS)
+AM_CFLAGS = $(CWARNFLAGS) $(XWD_CFLAGS)
 xwd_LDADD = $(XWD_LIBS)
 
 xwd_SOURCES =	\
@@ -69,7 +69,7 @@ MAN_SUBSTS = \
 SUFFIXES = .$(APP_MAN_SUFFIX) .man
 
 .man.$(APP_MAN_SUFFIX):
-	sed $(MAN_SUBSTS) < $< > $@
+	$(AM_V_GEN)$(SED) $(MAN_SUBSTS) < $< > $@
 
 EXTRA_DIST += ChangeLog
 MAINTAINERCLEANFILES = ChangeLog
