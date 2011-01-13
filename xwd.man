@@ -123,7 +123,7 @@ To get default host and display number.
 .B XWDFile.h
 X Window Dump File format definition file.
 .SH SEE ALSO
-xwud(1), X(__miscmansuffix__)
+xwud(__appmansuffix__), X(__miscmansuffix__)
 .SH AUTHORS
 Tony Della Fera, Digital Equipment Corp., MIT Project Athena
 .br
