@@ -111,15 +111,26 @@ static int ReadColors(Visual *, Colormap, XColor **);
 
 static long parse_long (char *s)
 {
-    char *fmt = "%lu";
     long retval = 0L;
     int thesign = 1;
 
     if (s && s[0]) {
-	if (s[0] == '-') s++, thesign = -1;
-	if (s[0] == '0') s++, fmt = "%lo";
-	if (s[0] == 'x' || s[0] == 'X') s++, fmt = "%lx";
-	(void) sscanf (s, fmt, &retval);
+	switch(s[0]) {
+	    case '-':
+		(void) sscanf (s + 1, "%lu", &retval);
+        	thesign = -1;
+		break;
+	    case '0':
+		(void) sscanf (s + 1, "%lo", &retval);
+		break;
+	    case 'x':
+	    case 'X':
+		(void) sscanf (s + 1, "%lx", &retval);
+		break;
+	    default:
+		(void) sscanf (s, "%lu", &retval);
+		break;
+	}
     }
     return (thesign * retval);
 }
