@@ -247,7 +247,6 @@ Window_Dump(Window window, FILE *out)
     int absx, absy, x, y;
     unsigned width, height;
     int dwidth, dheight;
-    int bw;
     Window dummywin;
     XWDFileHeader header;
     XWDColor xwdcolor;
@@ -295,14 +294,12 @@ Window_Dump(Window window, FILE *out)
     win_info.y = absy;
     width = win_info.width;
     height = win_info.height;
-    bw = 0;
 
     if (!nobdrs) {
 	absx -= win_info.border_width;
 	absy -= win_info.border_width;
-	bw = win_info.border_width;
-	width += (2 * bw);
-	height += (2 * bw);
+	width += (2 * win_info.border_width);
+	height += (2 * win_info.border_width);
     }
     dwidth = DisplayWidth (dpy, screen);
     dheight = DisplayHeight (dpy, screen);
