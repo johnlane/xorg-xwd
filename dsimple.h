@@ -76,9 +76,5 @@ void usage(void);
 
 Window Select_Window(Display *, int);
 Window Window_With_Name(Display *, Window, const char *);
-#ifdef __GNUC__
-void Fatal_Error(char *, ...) __attribute__((__noreturn__));
-#else
-void Fatal_Error(char *, ...);
-#endif
+void Fatal_Error(char *, ...) _X_NORETURN;
 void outl(char *, ...);
