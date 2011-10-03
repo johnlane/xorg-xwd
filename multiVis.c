@@ -38,6 +38,7 @@ from The Open Group.
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/X.h>
+#include <X11/Intrinsic.h>
 #include <stdio.h>
 #include "list.h"
 #include "wsutils.h"
@@ -1088,10 +1089,10 @@ int GetXVisualInfo(/* Which X server (aka "display"). */
 	 * do-while loop makes sure we get the entire list from the X server.
 	 */
 	bytesAfter = 0;
-	numLongs = sizeof(OverlayVisualPropertyRec) / 4;
+	numLongs = sizeof(OverlayVisualPropertyRec) / sizeof(long);
 	do
 	{
-	    numLongs += bytesAfter * 4;
+	    numLongs += bytesAfter * sizeof(long);
 	    XGetWindowProperty(display, RootWindow(display, screen),
 			       overlayVisualsAtom, 0, numLongs, False,
 			       overlayVisualsAtom, &actualType, &actualFormat,
@@ -1100,7 +1101,7 @@ int GetXVisualInfo(/* Which X server (aka "display"). */
 
 
 	/* Calculate the number of overlay visuals in the list. */
-	*numOverlayVisuals = numLongs / (sizeof(OverlayVisualPropertyRec) / 4);
+	*numOverlayVisuals = numLongs / (sizeof(OverlayVisualPropertyRec) / sizeof(long));
     }
     else
     {
