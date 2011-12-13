@@ -386,25 +386,11 @@ ReadRegionsInList(Display *disp, Visual *fakeVis, int depth, int format,
 
     XImage		*reg_image,*ximage ;
     int			srcRect_x,srcRect_y,srcRect_width,srcRect_height ;
-    int                 rem ;  
     int                 bytes_per_line;   
     int                 bitmap_unit; 
     
     bitmap_unit = sizeof (long);
-    if (format == ZPixmap)
-       bytes_per_line = width*depth/8;
-    else
-       bytes_per_line = width/8;
    
-
-    /* Find out how many more bytes are required for padding so that
-    ** bytes per scan line will be multiples of bitmap_unit bits */
-    if (format == ZPixmap) {
-       rem = (bytes_per_line*8)%bitmap_unit; 
-    if (rem)
-       bytes_per_line += (rem/8 + 1);
-    }
-
     ximage = XCreateImage(disp,fakeVis,depth,format,0,NULL,width,height,
 	         8,0) ;
     bytes_per_line = ximage->bytes_per_line;
