@@ -61,7 +61,7 @@ Display *Open_Display(const char *);
 void Setup_Display_And_Screen(int *, char **);
 void Close_Display(void);
 Window Select_Window_Args(int *, char **);
-void usage(void);
+void usage(void) _X_NORETURN;
 
 #define X_USAGE "[host:display]"              /* X arguments handled by
 						 Get_Display_Name */
