@@ -38,7 +38,6 @@ from The Open Group.
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/X.h>
-#include <X11/Intrinsic.h>
 #include <stdio.h>
 #include "list.h"
 #include "wsutils.h"

@@ -71,7 +71,6 @@ in this Software without prior written authorization from The Open Group.
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
-typedef unsigned long Pixel;
 #include "X11/XWDFile.h"
 
 #define FEEP_VOLUME 0
