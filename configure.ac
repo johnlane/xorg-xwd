@@ -38,8 +38,18 @@ m4_ifndef([XORG_MACROS_VERSION],
 XORG_MACROS_VERSION(1.8)
 XORG_DEFAULT_OPTIONS
 
+# Optional dependencies
+AC_ARG_WITH(xkb,
+        AS_HELP_STRING([--without-xkb],
+                [Disable use of XKB to sound bells (Default is with-xkb)]),
+        use_xkb="$withval", use_xkb="yes")
+if test x$use_xkb != xno ; then
+        XKBMODULE="xkbfile"
+        AC_DEFINE([XKB],1,[Define to use XkbStdBell])
+fi
+
 # Checks for pkg-config packages
-PKG_CHECK_MODULES(XWD, [x11 xproto >= 7.0.17])
+PKG_CHECK_MODULES(XWD, [x11 xproto >= 7.0.17 ${XKBMODULE}])
 
 AC_CONFIG_FILES([
 	Makefile
