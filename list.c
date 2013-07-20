@@ -101,16 +101,16 @@ list_ptr new_list (void)
     -------------------------------------------------------------------- **/
 list_ptr dup_list_head(list_ptr lp, int start_at_curr)
 {
-    list_ptr new_list;
+    list_ptr new_listp;
 
-    if ((new_list = (list_ptr) malloc( sizeof( list_item))) == NULL) {
+    if ((new_listp = (list_ptr) malloc( sizeof( list_item))) == NULL) {
 
         return (list_ptr)NULL;
     }
-    new_list->next = start_at_curr ? lp->ptr.curr : lp->next;
-    new_list->ptr.curr = lp->ptr.curr;
+    new_listp->next = start_at_curr ? lp->ptr.curr : lp->next;
+    new_listp->ptr.curr = lp->ptr.curr;
 
-    return new_list;
+    return new_listp;
 }
 
 
