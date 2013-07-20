@@ -116,7 +116,7 @@ extern unsigned int list_length();
 */
 
 /* Prototype Declarations for Static Functions */
-static int QueryColorMap(
+static void QueryColorMap(
            Display *, Colormap , Visual *, 
            XColor **, int *, int *, int *
 	   );
@@ -125,8 +125,8 @@ static void TransferImage(
            XImage *,int ,int 
 	   );
 static XImage * ReadRegionsInList(
-           Display *, Visual *, int ,int ,int ,
-           int , XRectangle, list_ptr 
+           Display *, Visual *, int, int, unsigned int,
+           unsigned int, XRectangle, list_ptr
            );
 
 static list_ptr make_region_list( 
@@ -179,16 +179,16 @@ void initFakeVisual(Visual *Vis)
     Vis->bits_per_rgb = 8 ;
 }
 
-static int
+static void
 QueryColorMap(Display *disp, Colormap src_cmap, Visual *src_vis,
 	      XColor **src_colors, int *rShift, int *gShift, int *bShift)
 {
-     int ncolors,i ;
+     unsigned int ncolors,i ;
      unsigned long       redMask, greenMask, blueMask;
      int                 redShift, greenShift, blueShift;
      XColor *colors ;
 
-     ncolors = src_vis->map_entries ;
+     ncolors = (unsigned) src_vis->map_entries ;
      *src_colors = colors = (XColor *)malloc(ncolors * sizeof(XColor) ) ;
 
      if(src_vis->class != TrueColor && src_vis->class != DirectColor)
@@ -233,9 +233,7 @@ QueryColorMap(Display *disp, Colormap src_cmap, Visual *src_vis,
         }
       }
 
-
-      XQueryColors(disp, src_cmap, colors, ncolors);
-      return ncolors ;
+      XQueryColors(disp, src_cmap, colors, (int) ncolors);
 }
 
 int
@@ -301,7 +299,7 @@ static void TransferImage(Display *disp, XImage *reg_image,
     XColor *colors;
     int rShift = 0, gShift = 0, bShift = 0;
 
-    (void) QueryColorMap(disp,reg->cmap,reg->vis,&colors,
+    QueryColorMap(disp,reg->cmap,reg->vis,&colors,
 	 &rShift,&gShift,&bShift) ;
 
     switch (reg->vis->class) {
@@ -375,7 +373,7 @@ static void TransferImage(Display *disp, XImage *reg_image,
 
 static XImage *
 ReadRegionsInList(Display *disp, Visual *fakeVis, int depth, int format,
-		  int width,int height,
+		  unsigned int width, unsigned int height,
 		  XRectangle bbox,	/* bounding box of grabbed area */
 		  list_ptr regions)	/* list of regions to read from */
 {

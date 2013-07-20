@@ -251,8 +251,8 @@ Window_Dump(Window window, FILE *out)
     unsigned long swaptest = 1;
     XColor *colors;
     unsigned buffer_size;
-    int win_name_size;
-    int header_size;
+    size_t win_name_size;
+    CARD32 header_size;
     int ncolors, i;
     char *win_name;
     char default_win_name[] = "xwdump";
@@ -407,7 +407,7 @@ Window_Dump(Window window, FILE *out)
      * Calculate header size.
      */
     if (debug) outl("xwd: Calculating header size.\n");
-    header_size = SIZEOF(XWDheader) + win_name_size;
+    header_size = SIZEOF(XWDheader) + (CARD32) win_name_size;
 
     /*
      * Write out header information.
