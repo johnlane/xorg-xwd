@@ -255,6 +255,7 @@ Window_Dump(Window window, FILE *out)
     int header_size;
     int ncolors, i;
     char *win_name;
+    char default_win_name[] = "xwdump";
     Bool got_win_name;
     XWindowAttributes win_info;
     XImage *image;
@@ -327,7 +328,7 @@ Window_Dump(Window window, FILE *out)
 
     XFetchName(dpy, window, &win_name);
     if (!win_name || !win_name[0]) {
-	win_name = "xwdump";
+	win_name = default_win_name;
 	got_win_name = False;
     } else {
 	got_win_name = True;
