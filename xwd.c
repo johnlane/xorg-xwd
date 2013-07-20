@@ -27,22 +27,22 @@ in this Software without prior written authorization from The Open Group.
 /*
  * xwd.c MIT Project Athena, X Window system window raster image dumper.
  *
- * This program will dump a raster image of the contents of a window into a 
+ * This program will dump a raster image of the contents of a window into a
  * file for output on graphics printers or for other uses.
  *
  *  Author:	Tony Della Fera, DEC
  *		17-Jun-85
- * 
+ *
  *  Modification history:
  *
  *  11/14/86 Bill Wyatt, Smithsonian Astrophysical Observatory
- *    - Removed Z format option, changing it to an XY option. Monochrome 
+ *    - Removed Z format option, changing it to an XY option. Monochrome
  *      windows will always dump in XY format. Color windows will dump
  *      in Z format by default, but can be dumped in XY format with the
  *      -xy option.
  *
  *  11/18/86 Bill Wyatt
- *    - VERSION 6 is same as version 5 for monchrome. For colors, the 
+ *    - VERSION 6 is same as version 5 for monchrome. For colors, the
  *      appropriate number of Color structs are dumped after the header,
  *      which has the number of colors (=0 for monochrome) in place of the
  *      V5 padding at the end. Up to 16-bit displays are supported. I
@@ -202,7 +202,7 @@ main(int argc, char **argv)
     if (standard_out)
 	_setmode(fileno(out_file), _O_BINARY);
 #endif
-    
+
     /*
      * Let the user select the target window.
      */
@@ -265,7 +265,7 @@ Window_Dump(Window window, FILE *out)
     Window dummywin;
     XWDFileHeader header;
     XWDColor xwdcolor;
-    
+
     int                 transparentOverlays , multiVis;
     int                 numVisuals;
     XVisualInfo         *pVisuals;
@@ -294,13 +294,13 @@ Window_Dump(Window window, FILE *out)
      * Get the parameters of the window being dumped.
      */
     if (debug) outl("xwd: Getting target window information.\n");
-    if(!XGetWindowAttributes(dpy, window, &win_info)) 
+    if(!XGetWindowAttributes(dpy, window, &win_info))
       Fatal_Error("Can't get target window attributes.");
 
     /* handle any frame window */
     if (!XTranslateCoordinates (dpy, window, RootWindow (dpy, screen), 0, 0,
 				&absx, &absy, &dummywin)) {
-	fprintf (stderr, 
+	fprintf (stderr,
 		 "%s:  unable to translate window coordinates (%d,%d)\n",
 		 program_name, absx, absy);
 	exit (1);
@@ -344,18 +344,18 @@ Window_Dump(Window window, FILE *out)
     x = absx - win_info.x;
     y = absy - win_info.y;
 
-    multiVis = GetMultiVisualRegions(dpy,RootWindow(dpy, screen), 
-               absx, absy, 
+    multiVis = GetMultiVisualRegions(dpy,RootWindow(dpy, screen),
+               absx, absy,
 	       width, height,&transparentOverlays,&numVisuals, &pVisuals,
                &numOverlayVisuals,&pOverlayVisuals,&numImageVisuals,
                &pImageVisuals,&vis_regions,&vis_image_regions,&allImage) ;
     if (on_root || multiVis)
     {
 	if(!multiVis)
-	    image = XGetImage (dpy, RootWindow(dpy, screen), absx, absy, 
+	    image = XGetImage (dpy, RootWindow(dpy, screen), absx, absy,
                     width, height, AllPlanes, format);
 	else
-	    image = ReadAreaToImage(dpy, RootWindow(dpy, screen), absx, absy, 
+	    image = ReadAreaToImage(dpy, RootWindow(dpy, screen), absx, absy,
                 width, height,
     		numVisuals,pVisuals,numOverlayVisuals,pOverlayVisuals,
                 numImageVisuals, pImageVisuals,vis_regions,
@@ -581,7 +581,7 @@ ReadColors(Visual *vis, Colormap cmap, XColor **colors)
     }
 
     XQueryColors(dpy, cmap, *colors, ncolors);
-    
+
     return(ncolors);
 }
 

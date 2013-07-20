@@ -139,7 +139,7 @@ void Close_Display(void)
 {
     if (dpy == NULL)
       return;
-      
+
     XCloseDisplay(dpy);
     dpy = NULL;
 }
@@ -215,7 +215,7 @@ Window Select_Window_Args(
 		COPYOPT;
 	}
 	ARGC = nargc;
-	
+
 	return(w);
 }
 
@@ -265,7 +265,7 @@ Window Select_Window(Display *disp, int descend)
 	buttons--;
        break;
     }
-  } 
+  }
 
   XUngrabPointer(disp, CurrentTime);      /* Done with pointer */
 
