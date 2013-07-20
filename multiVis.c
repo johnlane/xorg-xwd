@@ -299,7 +299,7 @@ static void TransferImage(Display *disp, XImage *reg_image,
 {
     int i,j,old_pixel,new_pixel,red_ind,green_ind,blue_ind ;
     XColor *colors;
-    int rShift,gShift,bShift;
+    int rShift = 0, gShift = 0, bShift = 0;
 
     (void) QueryColorMap(disp,reg->cmap,reg->vis,&colors,
 	 &rShift,&gShift,&bShift) ;
