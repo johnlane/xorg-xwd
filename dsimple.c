@@ -314,8 +314,7 @@ Window Window_With_Name(
 /*
  * outl: a debugging routine.  Flushes stdout then prints a message on stderr
  *       and flushes stderr.  Used to print messages when past certain points
- *       in code so we can tell where we are.  Outl may be invoked like
- *       printf with up to 7 arguments.
+ *       in code so we can tell where we are.  Outl may be invoked like printf.
  */
 void
 outl(const char *msg, ...)
@@ -331,7 +330,7 @@ outl(const char *msg, ...)
 
 
 /*
- * Standard fatal error routine - call like printf but maximum of 7 arguments.
+ * Standard fatal error routine - call like printf.
  * Does not require dpy or screen defined.
  */
 void Fatal_Error(const char *msg, ...)

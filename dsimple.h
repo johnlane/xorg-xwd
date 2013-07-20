@@ -76,5 +76,5 @@ void usage(void) _X_NORETURN;
 
 Window Select_Window(Display *, int);
 Window Window_With_Name(Display *, Window, const char *);
-void Fatal_Error(const char *, ...) _X_NORETURN;
-void outl(const char *, ...);
+void Fatal_Error(const char *, ...) _X_NORETURN _X_ATTRIBUTE_PRINTF(1, 2);
+void outl(const char *, ...) _X_ATTRIBUTE_PRINTF(1, 2);
