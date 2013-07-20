@@ -386,9 +386,6 @@ ReadRegionsInList(Display *disp, Visual *fakeVis, int depth, int format,
     XImage		*reg_image,*ximage ;
     int			srcRect_x,srcRect_y,srcRect_width,srcRect_height ;
     int                 bytes_per_line;   
-    int                 bitmap_unit; 
-    
-    bitmap_unit = sizeof (long);
    
     ximage = XCreateImage(disp,fakeVis,depth,format,0,NULL,width,height,
 	         8,0) ;
