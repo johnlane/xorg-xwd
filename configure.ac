@@ -48,7 +48,7 @@ if test x$use_xkb != xno ; then
 fi
 
 # Checks for pkg-config packages
-PKG_CHECK_MODULES(XWD, [x11 xproto >= 7.0.17 ${XKBMODULE}])
+PKG_CHECK_MODULES(XWD, [x11 xproto >= 7.0.25 ${XKBMODULE}])
 
 AC_CONFIG_FILES([
 	Makefile
