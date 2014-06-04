@@ -196,6 +196,10 @@ main(int argc, char **argv)
 	    silent = True;
 	    continue;
 	}
+	if (!strcmp(argv[i], "-version")) {
+	    puts(PACKAGE_STRING);
+	    exit(0);
+	}
 	fprintf (stderr, "%s: unrecognized argument '%s'\n",
 		 program_name, argv[i]);
 	usage(NULL);
@@ -528,7 +532,7 @@ usage(const char *errmsg)
     fprintf (stderr,
 "usage: %s [-display host:dpy] [-debug] [-help] %s [-nobdrs] [-out <file>]",
 	   program_name, "[{-root|-id <id>|-name <name>}]");
-    fprintf (stderr, " [-xy] [-add value] [-frame]\n");
+    fprintf (stderr, " [-xy] [-add value] [-frame] [-version]\n");
     exit(1);
 }
 
