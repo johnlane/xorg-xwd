@@ -74,6 +74,7 @@ in this Software without prior written authorization from The Open Group.
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
+#include <X11/Xatom.h>
 
 #include "X11/XWDFile.h"
 
@@ -94,6 +95,7 @@ in this Software without prior written authorization from The Open Group.
 static int format = ZPixmap;
 static Bool nobdrs = False;
 static Bool on_root = False;
+static Bool bg_only = False;
 static Bool standard_out = True;
 static Bool debug = False;
 static Bool silent = False;
@@ -192,6 +194,10 @@ main(int argc, char **argv)
 	    frame_only = True;
 	    continue;
 	}
+	if (!strcmp(argv[i], "-bg")) {
+	    bg_only = True;
+	    continue;
+	}
 	if (!strcmp(argv[i], "-silent")) {
 	    silent = True;
 	    continue;
@@ -284,6 +290,12 @@ Window_Dump(Window window, FILE *out)
     Visual		vis_h,*vis ;
     int			allImage = 0 ;
 
+    Pixmap              bg_pixmap;
+    Atom                act_type;
+    int                 act_format;
+    unsigned long       nitems, bytes_after;
+    unsigned char       *bg_data = NULL;
+
     /*
      * Inform the user not to alter the screen.
      */
@@ -350,25 +362,45 @@ Window_Dump(Window window, FILE *out)
     x = absx - win_info.x;
     y = absy - win_info.y;
 
-    multiVis = GetMultiVisualRegions(dpy,RootWindow(dpy, screen),
+    if (bg_only)
+    {
+	if (debug) outl("xwd: Getting Background.\n");
+
+	if (XGetWindowProperty(dpy, RootWindow(dpy, screen),
+	    XInternAtom(dpy, "_XROOTPMAP_ID", False), 0, 1, False,
+	    XA_PIXMAP, &act_type, &act_format, &nitems, &bytes_after,
+	    &bg_data) == Success) {
+
+	    if (bg_data) {
+		image = XGetImage(dpy, *((Pixmap *) bg_data),
+				  absx, absy, width, height, AllPlanes, format);
+		XFree(bg_data);
+	    }
+	}
+    }
+    else
+    {
+        multiVis = GetMultiVisualRegions(dpy,RootWindow(dpy, screen),
                absx, absy,
 	       width, height,&transparentOverlays,&numVisuals, &pVisuals,
                &numOverlayVisuals,&pOverlayVisuals,&numImageVisuals,
                &pImageVisuals,&vis_regions,&vis_image_regions,&allImage) ;
-    if (on_root || multiVis)
-    {
-	if(!multiVis)
-	    image = XGetImage (dpy, RootWindow(dpy, screen), absx, absy,
+        if (on_root || multiVis)
+        {
+	    if(!multiVis)
+	        image = XGetImage (dpy, RootWindow(dpy, screen), absx, absy,
                     width, height, AllPlanes, format);
-	else
-	    image = ReadAreaToImage(dpy, RootWindow(dpy, screen), absx, absy,
-                width, height,
-    		numVisuals,pVisuals,numOverlayVisuals,pOverlayVisuals,
-                numImageVisuals, pImageVisuals,vis_regions,
-                vis_image_regions,format,allImage);
+	    else
+	        image = ReadAreaToImage(dpy, RootWindow(dpy, screen), absx, absy,
+                    width, height,
+		    numVisuals,pVisuals,numOverlayVisuals,pOverlayVisuals,
+                    numImageVisuals, pImageVisuals,vis_regions,
+                    vis_image_regions,format,allImage);
+        }
+        else
+	    image = XGetImage (dpy, window, x, y, width, height, AllPlanes, format);
     }
-    else
-	image = XGetImage (dpy, window, x, y, width, height, AllPlanes, format);
+
     if (!image) {
 	fprintf (stderr, "%s:  unable to get image at %dx%d+%d+%d\n",
 		 program_name, width, height, x, y);
@@ -532,7 +564,7 @@ usage(const char *errmsg)
     fprintf (stderr,
 "usage: %s [-display host:dpy] [-debug] [-help] %s [-nobdrs] [-out <file>]",
 	   program_name, "[{-root|-id <id>|-name <name>}]");
-    fprintf (stderr, " [-xy] [-add value] [-frame] [-version]\n");
+    fprintf (stderr, " [-xy] [-add value] [-frame] [-bg] [-version]\n");
     exit(1);
 }
 
