@@ -78,6 +78,12 @@ This option indicates that the window manager frame should be included when
 manually selecting a window.
 .PP
 .TP 8
+.B "-bg"
+This option indicates that the background behind the selected window should
+be dumped instead of the window itself. Use with -root to dump the root window
+background.
+.PP
+.TP 8
 .B "-root"
 This option indicates that the root window should be selected for the
 window dump, without requiring the user to select a window with the pointer.
